@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriFlow - Buyer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>AgriFlow Buyer</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a onclick="showSection('browse')">Browse Crops</a></li>
+                <li><a onclick="showSection('my-orders')">My Orders</a></li>
+                <li><a onclick="showSection('messages')">Messages</a></li>
+                <li><span class="user-info" id="user-greeting"></span><a onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div id="section-dashboard">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">Dashboard Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Orders</h4>
+                    <div class="number" id="stat-total-orders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Spent</h4>
+                    <div class="number" id="stat-spent">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Pending Orders</h4>
+                    <div class="number" id="stat-pending">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Completed Orders</h4>
+                    <div class="number" id="stat-completed">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Crops Section -->
+        <div id="section-browse" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: #2e7d32;">Browse Crops</h2>
+                <input type="text" id="search-crop" placeholder="Search crops..." style="padding: 0.5rem; width: 250px; border-radius: 4px; border: 1px solid #ccc;" onkeyup="filterCrops()">
+            </div>
+            <div class="cards-grid" id="browse-crops-list">
+                <!-- Crops listed here -->
+            </div>
+        </div>
+
+        <!-- My Orders Section -->
+        <div id="section-my-orders" class="hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">My Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Crop Name</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- Orders listed here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="section-messages" class="hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">My Messages</h2>
+            <div class="message-list" id="messages-list">
+                <!-- Messages listed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h3 style="margin-bottom: 1rem; color: #2e7d32;">Contact Seller</h3>
+            <p id="modal-crop-info" style="margin-bottom: 1rem;"></p>
+            <form onsubmit="sendMessage(event)">
+                <input type="hidden" id="modal-farmer-id">
+                <input type="hidden" id="modal-farmer-name">
+                <input type="hidden" id="modal-crop-id">
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="modal-message" rows="4" required></textarea>
+                </div>
+                <button type="submit" style="width: 100%">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AgriFlow. Supporting local farmers.</p>
+    </footer>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+        let currentUser = null;
+        let allCropsCache = [];
+
+        window.onload = () => {
+            const userStr = localStorage.getItem('agriflow_user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = JSON.parse(userStr);
+            if (currentUser.role !== 'buyer') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('user-greeting').textContent = `Welcome, ${currentUser.name}`;
+            showSection('dashboard');
+        };
+
+        function logout() {
+            localStorage.removeItem('agriflow_user');
+            window.location.href = 'login.html';
+        }
+
+        function showSection(sectionId) {
+            ['dashboard', 'browse', 'my-orders', 'messages'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden');
+            });
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+
+            if(sectionId === 'dashboard') loadDashboard();
+            if(sectionId === 'browse') loadCrops();
+            if(sectionId === 'my-orders') loadOrders();
+            if(sectionId === 'messages') loadMessages();
+        }
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch(`${API_URL}/dashboard/buyer/${currentUser.id}`);
+                if(res.ok) {
+                    const stats = await res.json();
+                    document.getElementById('stat-total-orders').textContent = stats.total_orders || 0;
+                    document.getElementById('stat-spent').textContent = `₹${stats.total_spent || 0}`;
+                    document.getElementById('stat-pending').textContent = stats.pending_orders || 0;
+                    document.getElementById('stat-completed').textContent = stats.completed_orders || 0;
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadCrops() {
+            try {
+                const res = await fetch(`${API_URL}/crops/`);
+                if(res.ok) {
+                    allCropsCache = await res.json();
+                    renderCrops(allCropsCache);
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function renderCrops(crops) {
+            const list = document.getElementById('browse-crops-list');
+            list.innerHTML = '';
+            if (crops.length === 0) {
+                list.innerHTML = '<p>No crops available yet.</p>';
+                return;
+            }
+            crops.forEach(crop => {
+                const cname = crop.name.replace(/"/g, '&quot;');
+                const fname = (crop.farmer || '').replace(/"/g, '&quot;');
+                list.innerHTML += `
+                    <div class="card">
+                        <h3>🌱 ${crop.name}</h3>
+                        <p><strong>Farmer:</strong> ${crop.farmer}</p>
+                        <p><strong>Category:</strong> ${crop.category || 'General'}</p>
+                        <p>${crop.description || ''}</p>
+                        <div style="display:flex; justify-content:space-between; margin:1rem 0;">
+                            <span>Available: ${crop.quantity} kg</span>
+                            <span class="price">₹${crop.price}/kg</span>
+                        </div>
+                        <div style="display:flex; gap:0.5rem">
+                            <button onclick="buyPrompt(${crop.id}, ${crop.price}, '${cname}')" style="flex:1">🛒 Buy Now</button>
+                            <button class="btn-secondary" onclick="openContactModal(${crop.id}, ${crop.farmer_id || 0}, '${fname}', '${cname}')" style="flex:1">📧 Contact</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCrops() {
+            const q = document.getElementById('search-crop').value.toLowerCase();
+            const filtered = allCropsCache.filter(c => c.name.toLowerCase().includes(q));
+            renderCrops(filtered);
+        }
+
+        async function buyPrompt(cropId, price, cropName) {
+            const qtyStr = prompt(`How many kg of ${cropName} would you like to buy? (Price: ₹${price}/kg)`);
+            if(!qtyStr) return;
+            const qty = parseFloat(qtyStr);
+            if(isNaN(qty) || qty <= 0) {
+                alert("Invalid quantity");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        crop_id: cropId,
+                        buyer_id: currentUser.id,
+                        buyer: currentUser.name,
+                        quantity: qty
+                    })
+                });
+                if(res.ok) {
+                    alert('Order placed successfully!');
+                } else {
+                    alert('Failed to place order.');
+                }
+            } catch(e) { alert('Network error'); }
+        }
+
+        function openContactModal(cropId, farmerId, farmerName, cropName) {
+            document.getElementById('modal-farmer-id').value = farmerId;
+            document.getElementById('modal-farmer-name').value = farmerName;
+            document.getElementById('modal-crop-id').value = cropId;
+            document.getElementById('modal-crop-info').innerHTML = `Send a message to <strong>${farmerName}</strong> regarding <strong>${cropName}</strong>.`;
+            document.getElementById('modal-message').value = '';
+            document.getElementById('contact-modal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('contact-modal').classList.add('hidden');
+        }
+
+        async function sendMessage(e) {
+            e.preventDefault();
+            const msgData = {
+                sender_id: currentUser.id,
+                receiver_id: parseInt(document.getElementById('modal-farmer-id').value),
+                crop_id: parseInt(document.getElementById('modal-crop-id').value),
+                message: document.getElementById('modal-message').value,
+                sender_name: currentUser.name,
+                receiver_name: document.getElementById('modal-farmer-name').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/messages/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(msgData)
+                });
+                if(res.ok) {
+                    alert('Message sent!');
+                    closeModal();
+                } else {
+                    alert('Failed to send message');
+                }
+            } catch(e) { alert('Network error'); }
+        }
+
+        async function loadOrders() {
+            try {
+                const res = await fetch(`${API_URL}/orders/buyer/${currentUser.id}`);
+                if(res.ok) {
+                    const orders = await res.json();
+                    const tbody = document.getElementById('orders-table-body');
+                    tbody.innerHTML = '';
+                    
+                    const resCrops = await fetch(`${API_URL}/crops/`);
+                    let cropMap = {};
+                    if(resCrops.ok) {
+                        const allCrops = await resCrops.json();
+                        allCrops.forEach(c => cropMap[c.id] = c);
+                    }
+
+                    orders.forEach(order => {
+                        const crop = cropMap[order.crop_id] || { name: 'Unknown', price: 0 };
+                        const totalPrice = (order.quantity * crop.price).toFixed(2);
+                        const statusClass = (order.status || 'placed').toLowerCase();
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>#${order.id}</td>
+                                <td>${crop.name}</td>
+                                <td>${order.quantity} kg</td>
+                                <td>₹${totalPrice}</td>
+                                <td><span class="badge ${statusClass}">${order.status || 'Placed'}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_URL}/messages/${currentUser.id}`);
+                if(res.ok) {
+                    const msgs = await res.json();
+                    const list = document.getElementById('messages-list');
+                    list.innerHTML = '';
+                    if(msgs.length === 0) list.innerHTML = '<p>No messages yet.</p>';
+                    msgs.forEach(m => {
+                        list.innerHTML += `
+                            <div class="message-item">
+                                <div class="message-header">
+                                    <span>From: ${m.sender_name} | To: ${m.receiver_name}</span>
+                                    <span>Crop ID: ${m.crop_id}</span>
+                                </div>
+                                <p>${m.message}</p>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(e) { console.error(e); }
+        }
+    </script>
+</body>
+</html>

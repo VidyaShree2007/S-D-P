@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmer - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🌾 AgriFlow</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="farmer.html" class="active">Farmer</a>
+      <a href="buyer.html">Buyer</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>👨‍🌾 Farmer Page</h1>
+    <p class="subtitle">Add your crops and track your orders.</p>
+
+    <div class="card">
+      <h2>Add a New Crop</h2>
+      <form id="cropForm">
+        <div class="form-grid">
+          <div>
+            <label for="cropName">Crop Name</label>
+            <input type="text" id="cropName" placeholder="e.g. Tomato" required />
+          </div>
+          <div>
+            <label for="farmerName">Farmer Name</label>
+            <input type="text" id="farmerName" placeholder="e.g. Ramesh" required />
+          </div>
+          <div>
+            <label for="cropQuantity">Quantity (kg)</label>
+            <input type="number" id="cropQuantity" min="1" step="1" placeholder="e.g. 100" required />
+          </div>
+          <div>
+            <label for="cropPrice">Price per kg (₹)</label>
+            <input type="number" id="cropPrice" min="0.01" step="0.01" placeholder="e.g. 25" required />
+          </div>
+        </div>
+        <button type="submit" class="btn">Add Crop</button>
+        <div id="cropMessage" class="message"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>📦 All Crops</h2>
+      <div id="farmerCrops" class="table-wrap"><p class="empty">Loading...</p></div>
+    </div>
+
+    <div class="card">
+      <h2>🧾 Orders</h2>
+      <div id="ordersList" class="table-wrap"><p class="empty">Loading...</p></div>
+    </div>
+  </div>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriFlow - Farmer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>AgriFlow Farmer</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a onclick="showSection('add-crop')">Add Crop</a></li>
+                <li><a onclick="showSection('my-orders')">My Orders</a></li>
+                <li><a onclick="showSection('messages')">Messages</a></li>
+                <li><span class="user-info" id="user-greeting"></span><a onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div id="section-dashboard">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">Dashboard Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>My Crops</h4>
+                    <div class="number" id="stat-crops">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Orders</h4>
+                    <div class="number" id="stat-orders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Stock</h4>
+                    <div class="number" id="stat-stock">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Revenue</h4>
+                    <div class="number" id="stat-revenue">₹0</div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem; color: #2e7d32;">My Active Crops</h3>
+            <div class="cards-grid" id="my-crops-list">
+                <!-- Crops listed here -->
+            </div>
+        </div>
+
+        <!-- Add Crop Section -->
+        <div id="section-add-crop" class="hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">Add New Crop</h2>
+            <div class="form-container" style="margin: 0;">
+                <form onsubmit="addCrop(event)">
+                    <div class="form-group">
+                        <label>Crop Name</label>
+                        <input type="text" id="crop-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="crop-category" required>
+                            <option value="Vegetables">Vegetables</option>
+                            <option value="Fruits">Fruits</option>
+                            <option value="Grains">Grains</option>
+                            <option value="Pulses">Pulses</option>
+                            <option value="Spices">Spices</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity (kg)</label>
+                        <input type="number" id="crop-quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price per kg (₹)</label>
+                        <input type="number" id="crop-price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="crop-desc" rows="3"></textarea>
+                    </div>
+                    <button type="submit">Add Crop</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- My Orders Section -->
+        <div id="section-my-orders" class="hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">Orders Received</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Crop</th>
+                        <th>Buyer</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <!-- Orders listed here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="section-messages" class="hidden">
+            <h2 style="margin-bottom: 1.5rem; color: #2e7d32;">My Messages</h2>
+            <div class="message-list" id="messages-list">
+                <!-- Messages listed here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AgriFlow. Supporting local farmers.</p>
+    </footer>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+        let currentUser = null;
+
+        window.onload = () => {
+            const userStr = localStorage.getItem('agriflow_user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = JSON.parse(userStr);
+            if (currentUser.role !== 'farmer') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('user-greeting').textContent = `Welcome, ${currentUser.name}`;
+            loadDashboard();
+        };
+
+        function logout() {
+            localStorage.removeItem('agriflow_user');
+            window.location.href = 'login.html';
+        }
+
+        function showSection(sectionId) {
+            ['dashboard', 'add-crop', 'my-orders', 'messages'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden');
+            });
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+
+            if(sectionId === 'dashboard') loadDashboard();
+            if(sectionId === 'my-orders') loadOrders();
+            if(sectionId === 'messages') loadMessages();
+        }
+
+        async function loadDashboard() {
+            try {
+                // Fetch stats
+                try {
+                    const res = await fetch(`${API_URL}/dashboard/farmer/${currentUser.id}`);
+                    if(res.ok) {
+                        const stats = await res.json();
+                        document.getElementById('stat-crops').textContent = stats.total_crops || 0;
+                        document.getElementById('stat-orders').textContent = stats.total_orders || 0;
+                        document.getElementById('stat-stock').textContent = stats.total_stock || 0;
+                        document.getElementById('stat-revenue').textContent = `₹${stats.total_revenue || 0}`;
+                    }
+                } catch(e) { console.error("Dashboard stats error", e); }
+
+                // Fetch my crops
+                const resCrops = await fetch(`${API_URL}/crops`);
+                if(resCrops.ok) {
+                    const allCrops = await resCrops.json();
+                    const myCrops = allCrops.filter(c => c.farmer === currentUser.name || c.farmer_id === currentUser.id);
+                    
+                    const list = document.getElementById('my-crops-list');
+                    list.innerHTML = '';
+                    if (myCrops.length === 0) {
+                        list.innerHTML = '<p>No crops listed yet. Click "Add Crop" to get started!</p>';
+                    }
+                    myCrops.forEach(crop => {
+                        list.innerHTML += `
+                            <div class="card">
+                                <h3>🌱 ${crop.name}</h3>
+                                <p><strong>Category:</strong> ${crop.category || 'General'}</p>
+                                <p><strong>Quantity:</strong> ${crop.quantity} kg</p>
+                                <div class="price">₹${crop.price}/kg</div>
+                                <button class="btn-danger" style="margin-top:1rem" onclick="deleteCrop(${crop.id})">🗑️ Delete</button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function addCrop(e) {
+            e.preventDefault();
+            const cropData = {
+                name: document.getElementById('crop-name').value,
+                quantity: parseFloat(document.getElementById('crop-quantity').value),
+                price: parseFloat(document.getElementById('crop-price').value),
+                farmer: currentUser.name,
+                farmer_id: currentUser.id,
+                category: document.getElementById('crop-category').value,
+                description: document.getElementById('crop-desc').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/crops`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(cropData)
+                });
+                if(res.ok) {
+                    alert('Crop added successfully!');
+                    e.target.reset();
+                    showSection('dashboard');
+                } else {
+                    alert('Failed to add crop');
+                }
+            } catch(err) {
+                alert('Network error');
+            }
+        }
+
+        async function deleteCrop(id) {
+            if(!confirm('Are you sure you want to delete this crop?')) return;
+            try {
+                const res = await fetch(`${API_URL}/crops/${id}`, { method: 'DELETE' });
+                if(res.ok) loadDashboard();
+                else alert('Failed to delete');
+            } catch(e) { alert('Network error'); }
+        }
+
+        async function loadOrders() {
+            try {
+                const res = await fetch(`${API_URL}/orders/farmer/${currentUser.name}`);
+                if(res.ok) {
+                    const orders = await res.json();
+                    const tbody = document.getElementById('orders-table-body');
+                    tbody.innerHTML = '';
+                    orders.forEach(order => {
+                        const statusClass = (order.status || 'placed').toLowerCase();
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>#${order.id}</td>
+                                <td>${order.crop_name || 'Crop #' + order.crop_id}</td>
+                                <td>${order.buyer}</td>
+                                <td>${order.quantity} kg</td>
+                                <td><span class="badge ${statusClass}">${order.status || 'Placed'}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_URL}/messages/${currentUser.id}`);
+                if(res.ok) {
+                    const msgs = await res.json();
+                    const list = document.getElementById('messages-list');
+                    list.innerHTML = '';
+                    if(msgs.length === 0) list.innerHTML = '<p>No messages yet.</p>';
+                    msgs.forEach(m => {
+                        list.innerHTML += `
+                            <div class="message-item">
+                                <div class="message-header">
+                                    <span>From: ${m.sender_name} | To: ${m.receiver_name}</span>
+                                    <span>Crop ID: ${m.crop_id}</span>
+                                </div>
+                                <p>${m.message}</p>
+                            </div>
+                        `;
+                    });
+                }
+            } catch(e) { console.error(e); }
+        }
+    </script>
+</body>
+</html>

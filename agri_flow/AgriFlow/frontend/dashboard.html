@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🌾 AgriFlow</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="farmer.html">Farmer</a>
+      <a href="buyer.html">Buyer</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>📊 Dashboard</h1>
+    <p class="subtitle">A quick summary of the marketplace.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="number" id="totalCrops">0</div>
+        <div class="label">Total Crops</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="totalOrders">0</div>
+        <div class="label">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="totalStock">0</div>
+        <div class="label">Total Stock (kg)</div>
+      </div>
+    </div>
+
+    <p id="dashError" class="empty"></p>
+  </div>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>

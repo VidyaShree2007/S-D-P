@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Hub - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="vendor">
+  <header class="navbar" id="navbar"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <h1>🏪 Vendor Hub</h1>
+        <p class="subtitle">Buy wholesale from farmers, then sell from your own store.</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="wholesale">📦 Wholesale Market</button>
+        <button class="tab-btn" data-tab="store">🏪 My Store</button>
+        <button class="tab-btn" data-tab="orders">🧾 Orders</button>
+      </div>
+
+      <div id="tab-wholesale" class="tab-panel active">
+        <div class="toolbar">
+          <input type="text" id="wholesaleSearch" placeholder="🔍 Search farmers' crops..." />
+        </div>
+        <div id="wholesaleGrid" class="crop-grid"><p class="empty">Loading...</p></div>
+      </div>
+
+      <div id="tab-store" class="tab-panel">
+        <div class="note">
+          Crops you buy wholesale are added to your store automatically, with a starting retail price of
+          wholesale + 20%. Use <strong>Edit</strong> to set your own price. Buyers see your store in the Marketplace.
+        </div>
+        <div class="card">
+          <h2>My Store Inventory</h2>
+          <div id="storeCrops" class="table-wrap"><p class="empty">Loading...</p></div>
+        </div>
+      </div>
+
+      <div id="tab-orders" class="tab-panel">
+        <div class="card">
+          <h2>💰 Sales to Buyers</h2>
+          <div id="salesList" class="table-wrap"><p class="empty">Loading...</p></div>
+        </div>
+        <div class="card">
+          <h2>🚚 My Wholesale Purchases</h2>
+          <div id="purchasesList" class="table-wrap"><p class="empty">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Buy popup -->
+  <div id="buyModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Buy crop</h2>
+      <p id="modalInfo" class="subtitle"></p>
+
+      <form id="orderForm">
+        <input type="hidden" id="orderCropId" />
+
+        <label for="orderQuantity">Quantity (kg)</label>
+        <input type="number" id="orderQuantity" min="1" step="1" placeholder="How many kg?" required />
+
+        <div id="orderTotal" class="total-preview">Total: ₹0.00</div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn">Place Order</button>
+          <button type="button" class="btn btn-secondary" onclick="closeBuyModal()">Cancel</button>
+        </div>
+        <div id="orderMessage" class="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit crop popup -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2 id="editTitle">Edit crop</h2>
+      <form id="editForm">
+        <input type="hidden" id="editCropId" />
+
+        <label for="editPrice">Price per kg (₹)</label>
+        <input type="number" id="editPrice" min="0.01" step="0.01" required />
+
+        <label for="editQuantity">Stock (kg)</label>
+        <input type="number" id="editQuantity" min="0" step="1" required />
+        <p id="editQtyHelp" class="subtitle" style="display:none;font-size:0.85rem;margin-top:6px">
+          Vendor stock increases when you buy wholesale from farmers.
+        </p>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn">Save</button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+        </div>
+        <div id="editMessage" class="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriFlow - Login / Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>AgriFlow</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <div id="alert-box" class="alert hidden"></div>
+
+            <div id="login-form">
+                <h2>Welcome Back</h2>
+                <br>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" style="width:100%">Login</button>
+                </form>
+            </div>
+
+            <div id="register-form" class="hidden">
+                <h2>Create Account</h2>
+                <br>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="reg-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="reg-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="reg-role">
+                            <option value="buyer">Buyer</option>
+                            <option value="farmer">Farmer</option>
+                        </select>
+                    </div>
+                    <button type="submit" style="width:100%">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AgriFlow. Supporting local farmers.</p>
+    </footer>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // Check if already logged in
+        window.onload = () => {
+            const user = JSON.parse(localStorage.getItem('agriflow_user') || 'null');
+            if (user) {
+                window.location.href = user.role === 'farmer' ? 'farmer.html' : 'buyer.html';
+            }
+        };
+
+        function switchTab(tab) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+            hideAlert();
+
+            if(tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('login-form').classList.remove('hidden');
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('register-form').classList.remove('hidden');
+            }
+        }
+
+        function showAlert(msg, isSuccess) {
+            const box = document.getElementById('alert-box');
+            box.textContent = msg;
+            box.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+        }
+        function hideAlert() {
+            document.getElementById('alert-box').className = 'alert hidden';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if(res.ok) {
+                    const user = await res.json();
+                    localStorage.setItem('agriflow_user', JSON.stringify({
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        phone: user.phone
+                    }));
+                    window.location.href = user.role === 'farmer' ? 'farmer.html' : 'buyer.html';
+                } else {
+                    const data = await res.json();
+                    showAlert(data.detail || 'Invalid email or password', false);
+                }
+            } catch(err) {
+                showAlert('❌ Cannot connect to server. Make sure FastAPI is running.', false);
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+            const role = document.getElementById('reg-role').value;
+
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, password, role })
+                });
+
+                if(res.ok) {
+                    showAlert('✅ Registration successful! Please login.', true);
+                    e.target.reset();
+                    switchTab('login');
+                } else {
+                    const data = await res.json();
+                    showAlert(data.detail || 'Registration failed', false);
+                }
+            } catch(err) {
+                showAlert('❌ Cannot connect to server. Make sure FastAPI is running.', false);
+            }
+        }
+    </script>
+</body>
+</html>

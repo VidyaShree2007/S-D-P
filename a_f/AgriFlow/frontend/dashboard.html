@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="dashboard">
+  <header class="navbar" id="navbar"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <h1>📊 Dashboard</h1>
+        <p class="subtitle">A quick summary of the marketplace and your own activity.</p>
+      </div>
+
+      <h2>🌍 Marketplace overview</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="icon">🌽</div>
+          <div><div class="number" id="totalCrops">0</div><div class="label">Total Crops</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🧾</div>
+          <div><div class="number" id="totalOrders">0</div><div class="label">Total Orders</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📦</div>
+          <div><div class="number" id="totalStock">0</div><div class="label">Total Stock (kg)</div></div>
+        </div>
+      </div>
+
+      <h2>🙋 Your activity</h2>
+      <div class="stats-grid" id="myStats"></div>
+
+      <div class="card">
+        <h2 id="chartTitle">🏆 Top crops</h2>
+        <div id="topCrops"><p class="empty">Loading...</p></div>
+      </div>
+
+      <p id="dashError" class="empty"></p>
+    </div>
+  </main>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>

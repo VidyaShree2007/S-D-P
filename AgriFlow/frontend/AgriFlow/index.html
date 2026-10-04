@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriFlow - Direct Farmer to Buyer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>AgriFlow</h1>
+        </div>
+        <nav>
+            <ul id="nav-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#crops">Products</a></li>
+                <li id="nav-login"><a href="login.html">Login/Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h2>Fresh from Farm to your Table</h2>
+        <p>Connecting local farmers directly with buyers for better prices and fresher produce.</p>
+        <br>
+        <button onclick="window.location.href='#crops'">Browse Crops</button>
+    </div>
+
+    <div class="container" id="about">
+        <h2 style="text-align: center; color: #2e7d32; margin-bottom: 2rem;">Why Choose AgriFlow?</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>For Farmers</h3>
+                <p>Sell directly to buyers without middlemen. Get better prices for your hard work.</p>
+            </div>
+            <div class="card">
+                <h3>For Buyers</h3>
+                <p>Get fresh produce directly from local farms. Transparent pricing and traceability.</p>
+            </div>
+            <div class="card">
+                <h3>Community</h3>
+                <p>Support your local agricultural community and build sustainable food networks.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="crops">
+        <h2 style="color: #2e7d32; margin-bottom: 1rem;">Available Crops</h2>
+        <div class="cards-grid" id="crop-list">
+            <!-- Crops will be loaded here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 AgriFlow. Supporting local farmers.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

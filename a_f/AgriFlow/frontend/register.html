@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="register">
+  <header class="navbar" id="navbar"></header>
+
+  <main>
+    <div class="container">
+      <div class="auth-wrap">
+        <div class="card">
+          <h1>🌱 Join AgriFlow</h1>
+          <p class="subtitle">Pick your role and create your account.</p>
+
+          <form id="registerForm">
+            <label>I am a...</label>
+            <div class="role-picker">
+              <div>
+                <input type="radio" name="role" id="roleFarmer" value="farmer" />
+                <label for="roleFarmer"><span>👨‍🌾</span>Farmer<small>Sell my crops</small></label>
+              </div>
+              <div>
+                <input type="radio" name="role" id="roleVendor" value="vendor" />
+                <label for="roleVendor"><span>🏪</span>Vendor<small>Resell crops</small></label>
+              </div>
+              <div>
+                <input type="radio" name="role" id="roleBuyer" value="buyer" checked />
+                <label for="roleBuyer"><span>🛒</span>Buyer<small>Buy crops</small></label>
+              </div>
+            </div>
+
+            <label for="regName">Full name</label>
+            <input type="text" id="regName" placeholder="e.g. Ramesh Kumar" minlength="2" required />
+
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" placeholder="you@example.com" required />
+
+            <label for="regPassword">Password (at least 6 characters)</label>
+            <input type="password" id="regPassword" minlength="6" placeholder="Choose a password" required />
+
+            <button type="submit" class="btn btn-block">Create account</button>
+            <div id="authMessage" class="message"></div>
+          </form>
+
+          <p class="auth-switch">Already registered? <a href="login.html">Login</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriFlow | Smart Agriculture</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <div class="brand-icon">🌱</div>
+        <div>
+            <h2>Agri<span>Flow</span></h2>
+            <small>Smart Agriculture</small>
+        </div>
+    </div>
+
+    <div class="farmer-mini">
+        <div class="avatar">YK</div>
+        <div>
+            <strong>Yashaswini K</strong>
+            <span>Farmer</span>
+        </div>
+        <button class="more-btn">•••</button>
+    </div>
+
+    <nav>
+        <p class="nav-title">MAIN MENU</p>
+
+        <a href="#" class="nav-link active" data-section="dashboard">
+            <span>⌂</span> Dashboard
+        </a>
+
+        <a href="#" class="nav-link" data-section="crops">
+            <span>🌾</span> My Crops
+            <b class="nav-badge">4</b>
+        </a>
+
+        <a href="#" class="nav-link" data-section="market">
+            <span>📈</span> Market
+        </a>
+
+        <a href="#" class="nav-link" data-section="orders">
+            <span>🛒</span> Orders
+            <b class="nav-badge orange">3</b>
+        </a>
+
+        <p class="nav-title">MANAGEMENT</p>
+
+        <a href="#" class="nav-link" data-section="analytics">
+            <span>◫</span> Analytics
+        </a>
+
+        <a href="#" class="nav-link" data-section="profile">
+            <span>◎</span> My Profile
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="help-card">
+            <div class="help-icon">💡</div>
+            <strong>Need help?</strong>
+            <p>Check our farmer guide.</p>
+            <button>View Guide →</button>
+        </div>
+
+        <a href="#" class="logout" id="logoutBtn">
+            <span>↪</span> Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+<main class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <div class="search-box">
+            <span>⌕</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search crops, orders, market..."
+            >
+            <kbd>⌘ K</kbd>
+        </div>
+
+        <div class="top-actions">
+
+            <button class="icon-btn" id="themeBtn" title="Change theme">
+                ◐
+            </button>
+
+            <button class="icon-btn notification-btn" id="notificationBtn">
+                ♢
+                <i></i>
+            </button>
+
+            <div class="top-profile">
+                <div class="avatar small">YK</div>
+                <div class="top-profile-info">
+                    <strong>Yashaswini K</strong>
+                    <span>Farmer</span>
+                </div>
+                <span>⌄</span>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- ================= CONTENT ================= -->
+    <section class="content">
+
+        <!-- HERO -->
+        <div class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-tag">
+                    <span class="live-dot"></span>
+                    FARM STATUS: ACTIVE
+                </div>
+
+                <h1>
+                    Good morning, Yashaswini 👋
+                </h1>
+
+                <p>
+                    Manage your crops, track market prices and connect
+                    with buyers — all in one place.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="primary-btn" id="openCropModal">
+                        <span>＋</span> Add New Crop
+                    </button>
+
+                    <button class="secondary-btn" data-section="market">
+                        View Market →
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="hero-visual">
+
+                <div class="sun"></div>
+
+                <div class="hill hill-one"></div>
+                <div class="hill hill-two"></div>
+
+                <div class="field field-one"></div>
+                <div class="field field-two"></div>
+
+                <div class="farm-stat">
+                    <span>🌤️</span>
+                    <div>
+                        <strong>Farm Conditions</strong>
+                        <small>Good for cultivation</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- KPI CARDS -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon green">🌾</div>
+                    <span class="trend positive">↑ 12%</span>
+                </div>
+
+                <span class="stat-label">Total Crops</span>
+
+                <div class="stat-value">
+                    <strong id="cropCount">4</strong>
+                    <small>varieties</small>
+                </div>
+
+                <div class="mini-progress">
+                    <span style="width:72%"></span>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon blue">💰</div>
+                    <span class="trend positive">↑ 8.4%</span>
+                </div>
+
+                <span class="stat-label">Estimated Value</span>
+
+                <div class="stat-value">
+                    <strong>₹84.6K</strong>
+                    <small>this season</small>
+                </div>
+
+                <div class="sparkline">
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                    <span></span><span></span>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon orange">🛒</div>
+                    <span class="trend positive">+3</span>
+                </div>
+
+                <span class="stat-label">Active Orders</span>
+
+                <div class="stat-value">
+                    <strong>03</strong>
+                    <small>awaiting action</small>
+                </div>
+
+                <div class="order-dots">
+                    <i></i><i></i><i></i><i></i><i></i>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div class="stat-icon purple">📊</div>
+                    <span class="trend positive">↑ 5.2%</span>
+                </div>
+
+                <span class="stat-label">Monthly Sales</span>
+
+                <div class="stat-value">
+                    <strong>₹31.2K</strong>
+                    <small>vs ₹29.6K</small>
+                </div>
+
+                <div class="mini-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- SECTION GRID -->
+        <div class="dashboard-grid">
+
+            <!-- CROPS -->
+            <div class="panel crops-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">YOUR INVENTORY</span>
+                        <h2>My Crops</h2>
+                    </div>
+
+                    <button class="text-btn" data-section="crops">
+                        View all →
+                    </button>
+                </div>
+
+
+                <div class="crop-list" id="cropList">
+
+                    <div class="crop-row" data-search="tomato red tomato">
+                        <div class="crop-image tomato">🍅</div>
+
+                        <div class="crop-info">
+                            <strong>Tomato</strong>
+                            <span>Grade A • 240 kg</span>
+                        </div>
+
+                        <div class="crop-price">
+                            <strong>₹38/kg</strong>
+                            <span class="up">↑ 6.2%</span>
+                        </div>
+
+                        <div class="stock-bar">
+                            <span style="width:76%"></span>
+                        </div>
+
+                        <button class="row-menu">•••</button>
+                    </div>
+
+
+                    <div class="crop-row" data-search="rice basmati">
+                        <div class="crop-image rice">🌾</div>
+
+                        <div class="crop-info">
+                            <strong>Basmati Rice</strong>
+                            <span>Premium • 520 kg</span>
+                        </div>
+
+                        <div class="crop-price">
+                            <strong>₹72/kg</strong>
+                            <span class="up">↑ 3.8%</span>
+                        </div>
+
+                        <div class="stock-bar">
+                            <span style="width:88%"></span>
+                        </div>
+
+                        <button class="row-menu">•••</button>
+                    </div>
+
+
+                    <div class="crop-row" data-search="potato">
+                        <div class="crop-image potato">🥔</div>
+
+                        <div class="crop-info">
+                            <strong>Potato</strong>
+                            <span>Grade A • 350 kg</span>
+                        </div>
+
+                        <div class="crop-price">
+                            <strong>₹29/kg</strong>
+                            <span class="down">↓ 1.4%</span>
+                        </div>
+
+                        <div class="stock-bar">
+                            <span style="width:54%"></span>
+                        </div>
+
+                        <button class="row-menu">•••</button>
+                    </div>
+
+
+                    <div class="crop-row" data-search="onion">
+                        <div class="crop-image onion">🧅</div>
+
+                        <div class="crop-info">
+                            <strong>Onion</strong>
+                            <span>Grade B • 180 kg</span>
+                        </div>
+
+                        <div class="crop-price">
+                            <strong>₹34/kg</strong>
+                            <span class="up">↑ 2.1%</span>
+                        </div>
+
+                        <div class="stock-bar">
+                            <span style="width:41%"></span>
+                        </div>
+
+                        <button class="row-menu">•••</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MARKET -->
+            <div class="panel market-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">TODAY'S MARKET</span>
+                        <h2>Market Pulse</h2>
+                    </div>
+
+                    <span class="market-live">
+                        <i></i> Live
+                    </span>
+                </div>
+
+                <div class="market-chart">
+
+                    <div class="chart-labels">
+                        <span>₹80</span>
+                        <span>₹60</span>
+                        <span>₹40</span>
+                        <span>₹20</span>
+                    </div>
+
+                    <div class="chart-area">
+
+                        <svg viewBox="0 0 500 180"
+                             preserveAspectRatio="none">
+
+                            <defs>
+                                <linearGradient
+                                    id="chartFill"
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1">
+
+                                    <stop
+                                        offset="0%"
+                                        stop-color="#65c466"
+                                        stop-opacity=".35"/>
+
+                                    <stop
+                                        offset="100%"
+                                        stop-color="#65c466"
+                                        stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+
+                            <path
+                                class="chart-fill"
+                                d="M0,130 C45,115 55,125 90,90
+                                   C125,55 150,105 190,78
+                                   C230,52 245,90 280,70
+                                   C320,45 345,65 370,45
+                                   C410,18 440,55 500,25
+                                   L500,180 L0,180 Z"/>
+
+                            <path
+                                class="chart-line"
+                                d="M0,130 C45,115 55,125 90,90
+                                   C125,55 150,105 190,78
+                                   C230,52 245,90 280,70
+                                   C320,45 345,65 370,45
+                                   C410,18 440,55 500,25"/>
+
+                            <circle cx="370" cy="45" r="5"/>
+                        </svg>
+
+                    </div>
+
+                    <div class="chart-days">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+
+                </div>
+
+                <div class="market-items">
+
+                    <div>
+                        <span class="market-dot tomato-dot"></span>
+                        <strong>Tomato</strong>
+                        <b>₹38/kg</b>
+                    </div>
+
+                    <div>
+                        <span class="market-dot rice-dot"></span>
+                        <strong>Rice</strong>
+                        <b>₹72/kg</b>
+                    </div>
+
+                    <div>
+                        <span class="market-dot potato-dot"></span>
+                        <strong>Potato</strong>
+                        <b>₹29/kg</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOWER GRID -->
+        <div class="lower-grid">
+
+            <!-- QUICK ACTIONS -->
+            <div class="panel quick-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">SHORTCUTS</span>
+                        <h2>Quick Actions</h2>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+
+                    <button class="quick-action" id="quickAddCrop">
+                        <span class="qa-icon green">＋</span>
+                        <strong>Add Crop</strong>
+                        <small>List new harvest</small>
+                    </button>
+
+                    <button class="quick-action" data-section="market">
+                        <span class="qa-icon blue">↗</span>
+                        <strong>Check Prices</strong>
+                        <small>View market rates</small>
+                    </button>
+
+                    <button class="quick-action" data-section="orders">
+                        <span class="qa-icon orange">□</span>
+                        <strong>Orders</strong>
+                        <small>Manage your sales</small>
+                    </button>
+
+                    <button class="quick-action" data-section="analytics">
+                        <span class="qa-icon purple">◔</span>
+                        <strong>Analytics</strong>
+                        <small>Track performance</small>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVITY -->
+            <div class="panel activity-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="eyebrow">RECENT EVENTS</span>
+                        <h2>Activity</h2>
+                    </div>
+
+                    <button class="text-btn">See all</button>
+                </div>
+
+                <div class="timeline">
+
+                    <div class="activity">
+                        <div class="activity-icon green-bg">✓</div>
+                        <div>
+                            <strong>Order #AF1024 confirmed</strong>
+                            <span>Buyer: GreenMart • 20 minutes ago</span>
+                        </div>
+                        <b>+₹7,600</b>
+                    </div>
+
+                    <div class="activity">
+                        <div class="activity-icon blue-bg">₹</div>
+                        <div>
+                            <strong>Tomato price increased</strong>
+                            <span>Market price changed by 6.2%</span>
+                        </div>
+                        <b>Today</b>
+                    </div>
+
+                    <div class="activity">
+                        <div class="activity-icon orange-bg">+</div>
+                        <div>
+                            <strong>New crop added</strong>
+                            <span>Onion • 180 kg listed</span>
+                        </div>
+                        <b>Yesterday</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= ADD CROP MODAL ================= -->
+<div class="modal-overlay" id="cropModal">
+
+    <div class="modal">
+
+        <button class="modal-close" id="closeModal">×</button>
+
+        <div class="modal-header">
+
+            <div class="modal-icon">🌱</div>
+
+            <div>
+                <span class="eyebrow">INVENTORY</span>
+                <h2>Add New Crop</h2>
+                <p>List your harvest for buyers.</p>
+            </div>
+
+        </div>
+
+
+        <form id="cropForm">
+
+            <div class="form-group">
+                <label>Crop Name</label>
+
+                <input
+    type="text"
+    id="cropName"
+    placeholder="Enter crop name"
+    required
+>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Quantity (kg)</label>
+
+                    <input
+                        type="number"
+                        id="cropQuantity"
+                        placeholder="e.g. 250"
+                        min="1"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Price / kg</label>
+
+                    <div class="input-prefix">
+                        <span>₹</span>
+
+                        <input
+                            type="number"
+                            id="cropPrice"
+                            placeholder="e.g. 40"
+                            min="1"
+                            required
+                        >
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label>Quality Grade</label>
+
+                <div class="quality-options">
+
+                    <label>
+                        <input type="radio" name="grade" value="Grade A" checked>
+                        <span>
+                            <strong>A</strong>
+                            Premium
+                        </span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="grade" value="Grade B">
+                        <span>
+                            <strong>B</strong>
+                            Standard
+                        </span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="grade" value="Grade C">
+                        <span>
+                            <strong>C</strong>
+                            Basic
+                        </span>
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="estimated-value">
+                <span>Estimated inventory value</span>
+                <strong id="estimatedValue">₹0</strong>
+            </div>
+
+
+            <button class="submit-btn" type="submit">
+                Add Crop to Inventory →
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <div class="toast-check">✓</div>
+    <div>
+        <strong id="toastTitle">Success</strong>
+        <span id="toastMessage">Crop added successfully.</span>
+    </div>
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buyer - AgriFlow</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🌾 AgriFlow</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="farmer.html">Farmer</a>
+      <a href="buyer.html" class="active">Buyer</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>🛒 Buyer Page</h1>
+    <p class="subtitle">Fresh crops available right now. Click "Buy Now" to order.</p>
+
+    <div id="cropGrid" class="crop-grid"><p class="empty">Loading...</p></div>
+  </div>
+
+  <!-- Buy Now popup -->
+  <div id="buyModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Buy Crop</h2>
+      <p id="modalInfo" class="subtitle"></p>
+
+      <form id="orderForm">
+        <input type="hidden" id="orderCropId" />
+
+        <label for="buyerName">Your Name</label>
+        <input type="text" id="buyerName" placeholder="e.g. Anita" required />
+
+        <label for="orderQuantity">Quantity (kg)</label>
+        <input type="number" id="orderQuantity" min="1" step="1" required />
+
+        <button type="submit" class="btn">Place Order</button>
+        <button type="button" class="btn btn-secondary" onclick="closeBuyModal()">Cancel</button>
+        <div id="orderMessage" class="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <footer>AgriFlow © 2026 • Fresh from the farm 🌱</footer>
+  <script src="script.js"></script>
+</body>
+</html>
